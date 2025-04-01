@@ -6,7 +6,7 @@ const concatenateUint8Arrays = (array1, array2) => {
 }
 
 const main = async () => {
-  const response = await fetch('r');
+  const response = await fetch('/c/0');
   let data = [];
 
   for await (const chunk of response.body) {
