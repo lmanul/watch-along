@@ -12,11 +12,21 @@
             margin: 0;
         }
       </style>
+        <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+        <script src="https://vjs.zencdn.net/7.19.2/video.js"></script>
     </head>
     <body>
         <div id="container">
-            <video id="player" controls></video>
-            <div id="cache-status"></div>
+          <video
+            id="video"
+            class="video-js"
+            controls
+            preload="auto"
+            width="1920"
+            height="1080"
+          >
+          </video>
         </div>
         <script src="player.js"></script>
   </body>

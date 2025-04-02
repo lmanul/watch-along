@@ -6,25 +6,23 @@ const concatenateUint8Arrays = (array1, array2) => {
 }
 
 const main = async () => {
-  const response = await fetch('/c/0');
-  let data = [];
 
-  for await (const chunk of response.body) {
-    console.log(chunk);
-    data = concatenateUint8Arrays(data, chunk);
+  const video = document.getElementById('video');
+  const videoSrc = '/video/playlist.m3u8';
+  if (Hls.isSupported()) {
+    console.log('HLS supported');
+    const hls = new Hls();
+    hls.loadSource(videoSrc);
+    hls.attachMedia(video);
+    // hls.on(Hls.Events.MANIFEST_PARSED, function () {
+    //   video.play();
+    // });
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = videoSrc;
+    // video.addEventListener('loadedmetadata', function () {
+    //   video.play();
+    // });
   }
-
-  const videoElement = document.getElementById('player');
-
-  const blob = new Blob([data.buffer], { type: 'video/mp4' });
-  const url = URL.createObjectURL(blob);
-
-  videoElement.src = url;
-
-  // Revoke the object URL when done to free up resources
-  videoElement.onended = () => {
-      URL.revokeObjectURL(url);
-  };
 };
 
 main();
