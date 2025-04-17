@@ -3,6 +3,7 @@
 import os
 
 def main():
+    os.system("cp node_modules/hls.js/dist/hls.min.js static/")
     os.system("npm run start")
 
 if __name__ == "__main__":

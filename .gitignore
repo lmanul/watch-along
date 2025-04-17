@@ -1,1 +1,3 @@
 node_modules
+static/video
+static/hls.min.js
