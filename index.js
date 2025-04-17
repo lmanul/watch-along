@@ -24,9 +24,11 @@ app.use('/tick', (request, response) => {
         request.session.clientId = newId;
         console.log('Registered ' + newId);
     }
-    console.log(request.query.t);
-    console.log('Tick from ' + request.session.clientId);
-    response.send(getTickResponse());
+    const clientId = request.session.clientId;
+    console.log('Tick from ' + clientId);
+    clientManager.setClientPosition(clientId, parseInt(request.query.t));
+    clientManager.setClientIsPlaying(clientId, request.query.p === '1');
+    response.send(getTickResponse(clientManager, clientId));
 });
 
 app.listen(port, () => {

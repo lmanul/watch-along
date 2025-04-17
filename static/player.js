@@ -7,14 +7,29 @@ const concatenateUint8Arrays = (array1, array2) => {
   return concatenatedArray;
 };
 
+const isVideoPlaying = () => {
+
+  const video = document.getElementById('video');
+
+  return video.currentTime > 0 &&
+    !video.paused &&
+    !video.ended &&
+    video.readyState > 2;
+}
+
 const tick = async () => {
-  const video = document.getElementById("video");
-  console.log(video.currentTime.toFixed(1));
+  const video = document.getElementById('video');
   const currentTimeDecisecond = 10 * video.currentTime.toFixed(1);
 
-  const tickResponse = await fetch('/tick?t=' + currentTimeDecisecond);
+  const tickResponse = await fetch(
+      '/tick?t=' + currentTimeDecisecond +
+      '&p=' + (isVideoPlaying() ? '1' : '0'));
   const tickObj = await tickResponse.json();
   console.log(tickObj);
+  if (tickObj.clientId !== tickObj.masterId) {
+    // We are not the master. Let's follow along.
+    video.currentTime = tickObj.masterPosition / 10;
+  }
   window.setTimeout(async () => {
     await tick();
   }, TICK_INTERVAL_SECONDS * 1000);
