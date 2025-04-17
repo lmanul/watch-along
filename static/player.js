@@ -17,6 +17,15 @@ const isVideoPlaying = () => {
     video.readyState > 2;
 }
 
+const needsSyncingWithMaster = (currentMasterPositionDecisecond) => {
+  const currentDecisecond = 10 * video.currentTime.toFixed(1);
+  if ((currentMasterPositionDecisecond > currentDecisecond + 20) ||
+      (currentMasterPositionDecisecond < currentDecisecond - 20)) {
+      return true;
+  }
+  return false;
+};
+
 const tick = async () => {
   const video = document.getElementById('video');
   const currentTimeDecisecond = 10 * video.currentTime.toFixed(1);
@@ -28,7 +37,17 @@ const tick = async () => {
   console.log(tickObj);
   if (tickObj.clientId !== tickObj.masterId) {
     // We are not the master. Let's follow along.
-    video.currentTime = tickObj.masterPosition / 10;
+    if (needsSyncingWithMaster(tickObj.masterPosition)) {
+      video.currentTime = tickObj.masterPosition / 10;
+    }
+    const videoIsPlaying = isVideoPlaying();
+    if (tickObj.masterIsPlaying && !videoIsPlaying) {
+      console.log('Master is playing and we are not. Playing.');
+      video.play();
+    } else if (!tickObj.masterIsPlaying && videoIsPlaying) {
+      console.log('We are playing and master is not. Pausing.');
+      video.pause();
+    }
   }
   window.setTimeout(async () => {
     await tick();
