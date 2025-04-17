@@ -14,9 +14,11 @@ const main = async () => {
     const hls = new Hls();
     hls.loadSource(videoSrc);
     hls.attachMedia(video);
-    // hls.on(Hls.Events.MANIFEST_PARSED, function () {
-    //   video.play();
-    // });
+    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+      console.log('Manifest parsed');
+       // video.play();
+    });
+    console.log(Hls.Events);
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = videoSrc;
     // video.addEventListener('loadedmetadata', function () {
