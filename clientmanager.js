@@ -45,7 +45,6 @@ class ClientManager {
 
     setClientPosition(clientId, positionDecisecond) {
         this.clients[clientId].positionDecisecond = positionDecisecond;
-        console.log('Setting position for ' + clientId + ' to ' + positionDecisecond);
     }
 
     setClientIsPlaying(clientId, isPlaying) {

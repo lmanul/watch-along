@@ -1,5 +1,7 @@
 const TICK_INTERVAL_SECONDS = 2;
 
+let percentageBuffered = 0;
+
 const concatenateUint8Arrays = (array1, array2) => {
   const concatenatedArray = new Uint8Array(array1.length + array2.length);
   concatenatedArray.set(array1, 0);
@@ -24,6 +26,19 @@ const needsSyncingWithMaster = (currentMasterPositionDecisecond) => {
       return true;
   }
   return false;
+};
+
+const getPercentageBuffered = () => {
+  const video = document.getElementById('video');
+  // Loop over buffered ranges
+  let bufferedSeconds = 0;
+  for (let i = 0; i < video.buffered.length; i++) {
+    const start = video.buffered.start(i);
+    const end = video.buffered.end(i);
+    console.log(`Buffered range: ${start} - ${end}`);
+    bufferedSeconds += (end - start);
+  }
+  return (100 * bufferedSeconds / video.duration).toFixed(1);
 };
 
 const tick = async () => {
@@ -68,12 +83,8 @@ const main = async () => {
         console.log(`Event: ${event}`, data);
 
         if (event === Hls.Events.BUFFER_APPENDED) {
-          // Loop over buffered ranges
-          for (let i = 0; i < video.buffered.length; i++) {
-            const start = video.buffered.start(i);
-            const end = video.buffered.end(i);
-            console.log(`Buffered range: ${start} - ${end}`);
-          }
+          percentageBuffered = getPercentageBuffered();
+          console.log('New percentage ' + percentageBuffered);
         }
       });
     });
